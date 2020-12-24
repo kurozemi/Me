@@ -49,7 +49,7 @@ const style = StyleSheet.create(
     container: {
       flex: 1,
 
-      backgroundColor: 'rgba(0,0,0,0.4)',
+      backgroundColor: 'rgba(0,0,0,0.0001)',
     },
 
     recipeName: {
@@ -75,10 +75,10 @@ const style = StyleSheet.create(
 
     recipeContainer: {
       flexDirection: 'row',
-      backgroundColor: 'pink',
+      backgroundColor: '#fff28c',
 
       padding: 20,
-      marginBottom: 2,
+      marginBottom: 20,
       paddingRight: 30,
 
       height: 150,
