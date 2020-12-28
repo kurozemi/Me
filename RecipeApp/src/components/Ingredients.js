@@ -1,25 +1,31 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Image } from 'react-native'
+import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 const Ingredients = ({ navigation, route }) => {
     const { curRecipe } = route.params;
-    const ingredients = curRecipe.ingredients;
 
     return (
         <View style={style.main}>
-            <Text
-                style={style.recipeName}
-            >{curRecipe.name}</Text>
 
-            <Text style={style.ingredientsText}>
-                Ingredients
-            </Text>
-            <View
-            >
+            <ScrollView>
+
+                <Text
+                    style={style.heading}
+                >{curRecipe.name}</Text>
+
+                <Image
+                    style={style.foodPic}
+                    source={{ uri: curRecipe.imageURL }} />
+
+                <Text
+                    style={style.heading}
+                >Ingredients</Text>
+
                 <FlatList
+                    scrollEnabled={false}
                     keyExtractor={(item) => item.name}
-                    data={ingredients}
+                    data={curRecipe.ingredients}
                     renderItem={({ item }) => (
                         <View style={style.itemContainer}>
                             <Text style={style.item1}>{item.quantity}</Text>
@@ -27,7 +33,22 @@ const Ingredients = ({ navigation, route }) => {
                         </View>
                     )}
                 />
-            </View>
+
+                <Text style = {style.heading}>Preparation</Text>
+
+                <FlatList
+                    scrollEnabled = {false}
+                    data = {curRecipe.steps}
+                    renderItem = { ({item}) => (
+                        <View style = {style.steps}>
+                            <Text style = {style.stepOrder}>
+                                Step {curRecipe.steps.indexOf(item) + 1}: </Text>
+                            <Text style = {style.stepDetail}>{item}</Text>
+                        </View>
+                    )}
+                />
+            
+            </ScrollView>
         </View>
     )
 }
@@ -35,49 +56,68 @@ const Ingredients = ({ navigation, route }) => {
 const style = StyleSheet.create(
     {
         main: {
-            paddingTop: 30,
-            alignItems: 'center',
+            marginBottom: 30,
             flex: 1,
         },
 
-        ingredientsText: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            marginBottom: 20,
+        foodPic: {
+            alignSelf: 'stretch',
+            height: 250,
+            resizeMode: 'cover',
+            marginTop: 10,
+            borderWidth: 10,
         },
 
-        recipeName: {
-            padding: 20,
-            borderWidth: 2,
-            borderColor: 'black',
-            fontSize: 20,
-            backgroundColor: 'rgba(0,0,0,0.2)',
-            textAlign: 'center',
-            textAlignVertical: 'center',
-            margin: 35,
+        heading: {
+
+            marginTop: 15,
+            marginLeft: 10,
+            fontSize: 30,
+            fontWeight: 'bold',
         },
 
         itemContainer: {
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            borderWidth: 1,
+
+            borderBottomWidth: 2,
             borderColor: 'black',
+            borderColor: 'rgba(0,0,0,0.2)',
+
+            marginLeft: 10,
+            marginRight: 15,
+            paddingTop: 15,
+            paddingBottom: 15,
         },
         item1: {
-            fontSize: 17,
-            padding: 10,
+            alignSelf: 'center',
+            paddingLeft: 15,
+            fontSize: 20,
+            flex: 0.4,
+            fontWeight: 'bold'
         },
 
         item2: {
-            fontSize: 17,
-            padding: 10,
-
+            fontSize: 20,
+            flex: 0.6,
+            flexWrap: 'wrap',
         },
 
-        box: {
-            borderWidth: 1,
-            borderColor: 'black',
+        steps: {
+            marginLeft: 20,
+            marginTop: 10,
+            marginRight: 30,
         },
+        
+        stepOrder: {
+            paddingRight: 15,
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginBottom: 5,
+        },
+
+        stepDetail: {
+            fontSize: 18,
+        }
     }
 )
 export default Ingredients;

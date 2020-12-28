@@ -1,16 +1,19 @@
 import React from 'react'
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import Icon from 'react-native-vector-icons/AntDesign';
+
 
 
 const MainUI = ({ navigation }) => {
 
   const recipes = require('../assests/recipetypes.json');
   const findRecipeByName = (name) => {
-    for (var i = 0; i < recipes.length; i++){
+    for (var i = 0; i < recipes.length; i++) {
       if (recipes[i].name == name)
         return recipes[i];
     }
-}
+  }
+
   return (
     <View style={style.container}>
       <FlatList
@@ -35,6 +38,10 @@ const MainUI = ({ navigation }) => {
               <Text
 
                 style={style.recipeName}>{item.name}</Text>
+              <View style={style.timer}>
+                <Icon name='clockcircle' size={20} />
+                <Text> Cooking time: {item.timers} minutes</Text>
+              </View>
 
             </TouchableOpacity>
           </View>
@@ -47,41 +54,48 @@ const MainUI = ({ navigation }) => {
 const style = StyleSheet.create(
   {
     container: {
+      marginTop: 20,
       flex: 1,
-
-      backgroundColor: 'rgba(0,0,0,0.0001)',
     },
 
     recipeName: {
       color: 'black',
-      alignSelf: 'center',
+      textAlign: 'center',
       flex: 1,
       flexWrap: 'wrap',
-      fontSize: 20,
+      fontSize: 25,
       fontWeight: 'bold',
 
     },
 
+    timer: {
+      flexDirection: 'row',
+    },
     picContainer: {
-      marginLeft: 10,
-      marginRight: 20,
+      paddingRight: 15,
+      paddingLeft: 15,
+      paddingTop: 10,
+      paddingBottom: 10,
     },
 
     recipePic: {
-      height: 100,
-      width: 100,
-      resizeMode: 'center',
+      height: 200,
+      width: 330,
+      resizeMode: 'cover',
+      borderRadius: 25,
     },
 
     recipeContainer: {
-      flexDirection: 'row',
-      backgroundColor: '#fff28c',
+      backgroundColor: 'rgba(0,0,0,0.1)',
+      borderWidth: 3,
+      borderRadius: 25,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 15,
+      marginBottom: 30,
+      marginLeft: 10,
+      marginRight: 10,
 
-      padding: 20,
-      marginBottom: 20,
-      paddingRight: 30,
-
-      height: 150,
     }
   }
 )
