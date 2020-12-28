@@ -3,16 +3,16 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MainUI from './src/components/MainUI';
 import Ingredients from './src/components/Ingredients';
-import Preparation from './src/components/Preparation'
+import Realm from "./src/components/Realm";
 
 const App = () => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* <Stack.Screen name = "Realm" component = {Realm}></Stack.Screen> */}
         <Stack.Screen name = "MainUI" component = {MainUI}></Stack.Screen>
         <Stack.Screen name = "Ingredients" component = {Ingredients}></Stack.Screen>
-        <Stack.Screen name = "Preparation" component = {Preparation}></Stack.Screen>
       
       </Stack.Navigator>
     </NavigationContainer>

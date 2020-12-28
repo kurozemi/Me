@@ -117,6 +117,7 @@ const style = StyleSheet.create(
 
         stepDetail: {
             fontSize: 18,
+            textAlign: 'justify'
         }
     }
 )
