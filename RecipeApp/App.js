@@ -3,7 +3,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MainUI from './src/components/MainUI';
 import Ingredients from './src/components/Ingredients';
-import Realm from "./src/components/Realm";
 
 const App = () => {
   const Stack = createStackNavigator();

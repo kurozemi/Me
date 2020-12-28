@@ -1,20 +1,36 @@
 import React, { useState } from 'react'
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Picker } from '@react-native-picker/picker'
-import { ScrollView } from 'react-native-gesture-handler';
-import realm from './Realm'
+import { Picker } from '@react-native-picker/picker';
 
 
 
 const MainUI = ({ navigation }) => {
 
-  var data;
-  const recipesTest = require('../assests/test.json');
-  const recipeBreakfast = require('../assests/breakfast.json');
+  var recipeTest;
+  var recipeBreakfast;
+  const loadData = async () => {
+    // bug
+    // var temp = JSON.parse(await AsyncStorage.getItem(recipeName));
+    // console.log(recipeName, temp)
+    // return temp;
 
-  const [recipe, setRecipe] = useState(recipesTest);
+    recipeBreakfast = JSON.parse(await AsyncStorage.getItem('breakfast'));
+    recipeTest = JSON.parse(await AsyncStorage.getItem('test'));
+
+  }
+  loadData();
+
+  console.log('test', recipeTest);
+  const [recipe, setRecipe] = useState(recipeTest);
   const [picker, setPicker] = useState('test');
+
+
+  // const checkFirstRun = async () => {
+  //   if (await AsyncStorage.getItem('firstRun') === false) {
+  //     await AsyncStorage.setItem('test', require('../assests/t'))
+  //   }
+  // }
 
   const findRecipeByName = (name) => {
     for (var i = 0; i < recipe.length; i++) {
@@ -31,12 +47,14 @@ const MainUI = ({ navigation }) => {
           <Picker
             selectedValue={picker}
             onValueChange={(itemValue, itemIndex) => {
-              setPicker(itemValue);
+              setPicker(itemValue); 
               switch (itemValue) {
-                case ('test'): setRecipe(recipesTest); break;
-                case ('breakfast'): setRecipe(realm.object('Food')[0].name); break;
+                case ('breakfast'): setRecipe(recipeBreakfast); break;
+                case ('test'): setRecipe(recipeTest);
               }
-              }
+
+              //setRecipe(loadData(itemValue)); bug
+            }
             }
           >
             <Picker.Item label="Test" value="test" />
