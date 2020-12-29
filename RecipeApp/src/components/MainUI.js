@@ -3,34 +3,43 @@ import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView, 
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Picker } from '@react-native-picker/picker';
 
-
-
+var flagOnCreate = true;
 const MainUI = ({ navigation }) => {
 
-  var recipeTest;
-  var recipeBreakfast;
-  const loadData = async () => {
-    // bug
-    // var temp = JSON.parse(await AsyncStorage.getItem(recipeName));
-    // console.log(recipeName, temp)
-    // return temp;
+  const loadData = async (recipeName) => {
 
-    recipeBreakfast = JSON.parse(await AsyncStorage.getItem('breakfast'));
-    recipeTest = JSON.parse(await AsyncStorage.getItem('test'));
+    var temp = JSON.parse(await AsyncStorage.getItem(recipeName));
+    setRecipe(temp);
 
   }
-  loadData();
 
-  console.log('test', recipeTest);
-  const [recipe, setRecipe] = useState(recipeTest);
+  const [recipe, setRecipe] = useState();
   const [picker, setPicker] = useState('test');
 
 
-  // const checkFirstRun = async () => {
-  //   if (await AsyncStorage.getItem('firstRun') === false) {
-  //     await AsyncStorage.setItem('test', require('../assests/t'))
-  //   }
-  // }
+  console.log('test run');
+  const checkFirstRun = async () => {
+    const flag = await AsyncStorage.getItem('firstRun');
+    console.log("check", flag);
+    if (flag == null) {
+      console.log('hi');
+      let test = require('../assests/test.json');
+      let breakfast = require('../assests/breakfast.json');
+
+      await AsyncStorage.setItem('test', JSON.stringify(test));
+      setRecipe(test);
+
+      await AsyncStorage.setItem('breakfast', JSON.stringify(breakfast));
+      await AsyncStorage.setItem('firstRun', true);
+      
+    }
+  }
+  if (flagOnCreate) {
+    flagOnCreate = false;
+    checkFirstRun();
+    loadData('test');
+  }
+
 
   const findRecipeByName = (name) => {
     for (var i = 0; i < recipe.length; i++) {
@@ -47,13 +56,8 @@ const MainUI = ({ navigation }) => {
           <Picker
             selectedValue={picker}
             onValueChange={(itemValue, itemIndex) => {
-              setPicker(itemValue); 
-              switch (itemValue) {
-                case ('breakfast'): setRecipe(recipeBreakfast); break;
-                case ('test'): setRecipe(recipeTest);
-              }
-
-              //setRecipe(loadData(itemValue)); bug
+              setPicker(itemValue);
+              loadData(itemValue);
             }
             }
           >
