@@ -9,6 +9,7 @@ const MainUI = ({ navigation }) => {
   const loadData = async (recipeName) => {
 
     var temp = JSON.parse(await AsyncStorage.getItem(recipeName));
+    console.log(recipeName, temp);
     setRecipe(temp);
 
   }
@@ -30,7 +31,7 @@ const MainUI = ({ navigation }) => {
       setRecipe(test);
 
       await AsyncStorage.setItem('breakfast', JSON.stringify(breakfast));
-      await AsyncStorage.setItem('firstRun', true);
+      await AsyncStorage.setItem('firstRun', 'true');
       
     }
   }
@@ -44,8 +45,12 @@ const MainUI = ({ navigation }) => {
   const findRecipeByName = (name) => {
     for (var i = 0; i < recipe.length; i++) {
       if (recipe[i].name == name)
+      {
+        console.log('curRecipe', recipe[i]);
         return recipe[i];
+      }
     }
+    
   }
 
   return (
@@ -77,7 +82,8 @@ const MainUI = ({ navigation }) => {
                 activeOpacity={0.9}
                 onPress={() => {
                   navigation.navigate('Ingredients', {
-                    curRecipe: findRecipeByName(item.name)
+                    curRecipe: findRecipeByName(item.name),
+                    recipeType: picker
                   });
                 }}
               >

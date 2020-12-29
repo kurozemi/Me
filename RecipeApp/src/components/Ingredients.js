@@ -1,10 +1,18 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
-import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-
+import { View, Text, StyleSheet, Image, AsyncStorage } from 'react-native'
+import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 const Ingredients = ({ navigation, route }) => {
-    const { curRecipe } = route.params;
+    const { curRecipe, recipeType } = route.params;
 
+
+    const findRecipeByName = (recipe, name) => {
+        for (var i = 0; i < recipe.length; i++) {
+            if (recipe[i].name == name) {
+                return i;
+            }
+        }
+
+    }
     return (
         <View style={style.main}>
 
@@ -28,26 +36,43 @@ const Ingredients = ({ navigation, route }) => {
                     data={curRecipe.ingredients}
                     renderItem={({ item }) => (
                         <View style={style.itemContainer}>
-                            <Text style={style.item1}>{item.quantity}</Text>
+
+                            <TextInput
+                                style={style.item1}
+                                onChangeText ={async (text) => {
+                                    let index = curRecipe.ingredients.indexOf(item);
+
+
+                                    curRecipe.ingredients[index].quantity = text;
+
+                                    let fullRecipe = JSON.parse(await AsyncStorage.getItem(recipeType));
+                                    let index2 = findRecipeByName(fullRecipe, curRecipe.name);
+                                    console.log('index 2 = ', index2);
+                                    fullRecipe[index2] = curRecipe;
+
+                                    await AsyncStorage.setItem(recipeType,
+                                        JSON.stringify(fullRecipe));
+                                }}
+                            >{item.quantity}</TextInput>
                             <Text style={style.item2}>{item.name}</Text>
                         </View>
                     )}
                 />
 
-                <Text style = {style.heading}>Preparation</Text>
+                <Text style={style.heading}>Preparation</Text>
 
                 <FlatList
-                    scrollEnabled = {false}
-                    data = {curRecipe.steps}
-                    renderItem = { ({item}) => (
-                        <View style = {style.steps}>
-                            <Text style = {style.stepOrder}>
+                    scrollEnabled={false}
+                    data={curRecipe.steps}
+                    renderItem={({ item }) => (
+                        <View style={style.steps}>
+                            <Text style={style.stepOrder}>
                                 Step {curRecipe.steps.indexOf(item) + 1}: </Text>
-                            <Text style = {style.stepDetail}>{item}</Text>
+                            <Text style={style.stepDetail}>{item}</Text>
                         </View>
                     )}
                 />
-            
+
             </ScrollView>
         </View>
     )
@@ -78,6 +103,7 @@ const style = StyleSheet.create(
 
         itemContainer: {
             flexDirection: 'row',
+            alignItems: 'center',
 
             borderBottomWidth: 2,
             borderColor: 'black',
@@ -89,7 +115,6 @@ const style = StyleSheet.create(
             paddingBottom: 15,
         },
         item1: {
-            alignSelf: 'center',
             paddingLeft: 15,
             fontSize: 20,
             flex: 0.4,
@@ -107,7 +132,7 @@ const style = StyleSheet.create(
             marginTop: 10,
             marginRight: 30,
         },
-        
+
         stepOrder: {
             paddingRight: 15,
             fontSize: 20,
@@ -118,7 +143,10 @@ const style = StyleSheet.create(
         stepDetail: {
             fontSize: 18,
             textAlign: 'justify'
-        }
+        },
+        checkbox: {
+            alignSelf: 'center'
+        },
     }
 )
 export default Ingredients;
