@@ -27,6 +27,7 @@ const MainUI = ({ navigation }) => {
       let breakfast = require('../assests/breakfast.json');
 
       await AsyncStorage.setItem('test', JSON.stringify(test));
+      loadData('test');
 
       await AsyncStorage.setItem('breakfast', JSON.stringify(breakfast));
       await AsyncStorage.setItem('firstRun', 'true');
@@ -35,6 +36,7 @@ const MainUI = ({ navigation }) => {
   }
 
   checkFirstRun();
+
   const findRecipeByName = (name) => {
     for (var i = 0; i < recipe.length; i++) {
       if (recipe[i].name == name)
