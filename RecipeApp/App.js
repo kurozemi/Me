@@ -9,7 +9,6 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen name = "Realm" component = {Realm}></Stack.Screen> */}
         <Stack.Screen name = "MainUI" component = {MainUI}></Stack.Screen>
         <Stack.Screen name = "Ingredients" component = {Ingredients}></Stack.Screen>
       

@@ -3,7 +3,6 @@ import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView, 
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Picker } from '@react-native-picker/picker';
 
-var flagOnCreate = true;
 const MainUI = ({ navigation }) => {
 
   const loadData = async (recipeName) => {
@@ -14,11 +13,11 @@ const MainUI = ({ navigation }) => {
 
   }
 
-  const [recipe, setRecipe] = useState();
+  const [recipe, setRecipe] = useState( async() => {
+    await loadData('test')
+  } );
   const [picker, setPicker] = useState('test');
 
-
-  console.log('test run');
   const checkFirstRun = async () => {
     const flag = await AsyncStorage.getItem('firstRun');
     console.log("check", flag);
@@ -28,20 +27,14 @@ const MainUI = ({ navigation }) => {
       let breakfast = require('../assests/breakfast.json');
 
       await AsyncStorage.setItem('test', JSON.stringify(test));
-      setRecipe(test);
 
       await AsyncStorage.setItem('breakfast', JSON.stringify(breakfast));
       await AsyncStorage.setItem('firstRun', 'true');
       
     }
   }
-  if (flagOnCreate) {
-    flagOnCreate = false;
-    checkFirstRun();
-    loadData('test');
-  }
 
-
+  checkFirstRun();
   const findRecipeByName = (name) => {
     for (var i = 0; i < recipe.length; i++) {
       if (recipe[i].name == name)
