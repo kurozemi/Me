@@ -13,9 +13,9 @@ const MainUI = ({ navigation }) => {
 
   }
 
-  const [recipe, setRecipe] = useState( async() => {
+  const [recipe, setRecipe] = useState(async () => {
     await loadData('test')
-  } );
+  });
   const [picker, setPicker] = useState('test');
 
   const checkFirstRun = async () => {
@@ -31,7 +31,7 @@ const MainUI = ({ navigation }) => {
 
       await AsyncStorage.setItem('breakfast', JSON.stringify(breakfast));
       await AsyncStorage.setItem('firstRun', 'true');
-      
+
     }
   }
 
@@ -39,33 +39,43 @@ const MainUI = ({ navigation }) => {
 
   const findRecipeByName = (name) => {
     for (var i = 0; i < recipe.length; i++) {
-      if (recipe[i].name == name)
-      {
+      if (recipe[i].name == name) {
         console.log('curRecipe', recipe[i]);
         return recipe[i];
       }
     }
-    
+
   }
 
   return (
     <View style={style.container}>
 
       <ScrollView>
-        <View style={style.picker}>
-          <Picker
-            selectedValue={picker}
-            onValueChange={(itemValue, itemIndex) => {
-              setPicker(itemValue);
-              loadData(itemValue);
-            }
-            }
-          >
-            <Picker.Item label="Test" value="test" />
-            <Picker.Item label="Breakfast" value="breakfast" />
+        <View style = {style.headerContainer}> 
 
-          </Picker>
+          <TouchableOpacity
+            activeOpacity = {0.8}
+            onPress = { () => navigation.navigate('New Recipe')}
+          >
+            <Text style = {style.addRecipe}>+ Add new recipe</Text>
+          </TouchableOpacity>
+
+          <View style={style.picker}>
+            <Picker
+              selectedValue={picker}
+              onValueChange={(itemValue, itemIndex) => {
+                setPicker(itemValue);
+                loadData(itemValue);
+              }
+              }
+            >
+              <Picker.Item label="Test" value="test" />
+              <Picker.Item label="Breakfast" value="breakfast" />
+            </Picker>
+          </View>
+
         </View>
+
         <FlatList
           scrollEnabled={false}
           keyExtractor={(item) => item.name}
@@ -113,15 +123,23 @@ const style = StyleSheet.create(
       flex: 1,
     },
 
+    headerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 15,
+    },
+
+    addRecipe: {
+      marginLeft: 15,
+      fontSize: 20,
+      fontWeight: 'bold'
+    },
     picker: {
       marginRight: 10,
-      marginBottom: 15,
-
-      alignSelf: 'flex-end',
 
       height: 50,
       width: 140,
-
 
       borderWidth: 2,
       borderRadius: 10,

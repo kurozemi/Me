@@ -3,75 +3,25 @@ import { View, Text, StyleSheet, Image, AsyncStorage, ImageBackground } from 're
 import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign'
 import { HeaderBackButton } from '@react-navigation/stack'
-import { template } from '@babel/core';
-const Ingredients = ({ navigation, route }) => {
 
-    const { curRecipe, recipeType } = route.params;
-    const [isEditable, setIsEditable] = useState(false);
-    const [myRecipe, setmyRecipe] = useState(curRecipe);
+const NewRecipe = ({ navigation, route }) => {
 
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerLeft: () => (
-                <HeaderBackButton
-                    onPress={() => {
-                        console.log("edit", isEditable);
-                        if (isEditable) {
-                            alert('Do you want to save ?');
-                        }
-                        navigation.goBack();
-                    }}
-                >
-
-                </HeaderBackButton>
-            )
-        });
-    }, [navigation]);
-
-    const findRecipeByName = (recipe, name) => {
-        for (var i = 0; i < recipe.length; i++) {
-            if (recipe[i].name == name) {
-                return i;
-            }
-        }
-
-    }
-
-    const onSaveChange = async () => {
-        let fullRecipe = JSON.parse(await AsyncStorage.getItem(recipeType));
-        let index = findRecipeByName(fullRecipe, curRecipe.name);
-
-        fullRecipe[index] = myRecipe;
-
-        await AsyncStorage.setItem(recipeType,
-            JSON.stringify(fullRecipe));
-    }
     return (
         <View style={style.main}>
 
             <ScrollView>
 
                 <View style={style.headingContainer}>
-                    <Text
+                    <TextInput
+                        multiLine = {true}
                         style={style.heading}
-                    >{myRecipe.name}</Text>
-
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (isEditable)
-                                onSaveChange();
-                            setIsEditable(!isEditable);
-                        }}
-                        style={style.headerButton}
-                    >
-                        <Text style={style.headerButtonText}>{isEditable ? 'Save' : 'Edit'}</Text>
-                        <Icon name={isEditable ? 'save' : 'edit'} size={20} color='#2a58db'></Icon>
-                    </TouchableOpacity>
+                        placeholder = 'Recipe name'
+                    ></TextInput>
                 </View>
 
                 <Image
                     style={style.foodPic}
-                    source={{ uri: myRecipe.imageURL }} />
+                    source={{ uri: 'https://thumbs.dreamstime.com/b/no-image-available-icon-photo-camera-flat-vector-illustration-132483097.jpg' }} />
 
                 <View style={style.headingContainer}>
                     <Text
@@ -79,20 +29,16 @@ const Ingredients = ({ navigation, route }) => {
                     >Ingredients</Text>
 
                     <TouchableOpacity
-                        // onPress = {() => {
-                        //     myRecipe.ingredients.push({quantity: "", name: ""});
-                            
-                        // }}
                         style={style.headerButton}
                     >
                         <Text style={style.headerButtonText}>+ Add ingredient</Text>
                     </TouchableOpacity>
                 </View>
 
-                <FlatList
+                {/* <FlatList
                     scrollEnabled={false}
                     keyExtractor={(item) => item.name}
-                    data={myRecipe.ingredients}
+                    data={curRecipe.ingredients}
                     renderItem={({ item }) => (
                         <View style={style.itemContainer}>
 
@@ -117,7 +63,7 @@ const Ingredients = ({ navigation, route }) => {
                                 }, style.item2]} >{item.name}</TextInput>
                         </View>
                     )}
-                />
+                /> */}
 
                 <View style={style.headingContainer}>
                     <Text
@@ -131,13 +77,13 @@ const Ingredients = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
 
-                <FlatList
+                {/* <FlatList
                     scrollEnabled={false}
-                    data={myRecipe.steps}
+                    data={curRecipe.steps}
                     renderItem={({ item }) => (
                         <View style={style.steps}>
                             <Text style={style.stepOrder}>
-                                Step {myRecipe.steps.indexOf(item) + 1}: </Text>
+                                Step {curRecipe.steps.indexOf(item) + 1}: </Text>
                             <TextInput
                                 onChangeText={text => item = text}
                                 multiline={true}
@@ -149,7 +95,7 @@ const Ingredients = ({ navigation, route }) => {
                             </TextInput>
                         </View>
                     )}
-                />
+                /> */}
 
             </ScrollView>
         </View >
@@ -167,7 +113,7 @@ const style = StyleSheet.create(
             marginTop: 15,
             alignSelf: 'stretch',
             height: 250,
-            resizeMode: 'cover',
+            resizeMode: 'contain',
             borderWidth: 10,
         },
 
@@ -258,4 +204,4 @@ const style = StyleSheet.create(
 
     }
 )
-export default Ingredients;
+export default NewRecipe;
