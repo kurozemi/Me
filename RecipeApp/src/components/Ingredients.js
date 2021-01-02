@@ -3,30 +3,29 @@ import { View, Text, StyleSheet, Image, AsyncStorage, ImageBackground } from 're
 import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign'
 import { HeaderBackButton } from '@react-navigation/stack'
-import { template } from '@babel/core';
 const Ingredients = ({ navigation, route }) => {
 
     const { curRecipe, recipeType } = route.params;
     const [isEditable, setIsEditable] = useState(false);
     const [myRecipe, setmyRecipe] = useState(curRecipe);
 
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerLeft: () => (
-                <HeaderBackButton
-                    onPress={() => {
-                        console.log("edit", isEditable);
-                        if (isEditable) {
-                            alert('Do you want to save ?');
-                        }
-                        navigation.goBack();
-                    }}
-                >
+    // React.useLayoutEffect(() => {
+    //     navigation.setOptions({
+    //         headerLeft: () => (
+    //             <HeaderBackButton
+    //                 onPress={() => {
+    //                     console.log("edit", isEditable);
+    //                     if (isEditable) {
+    //                         alert('Do you want to save ?');
+    //                     }
+    //                     navigation.goBack();
+    //                 }}
+    //             >
 
-                </HeaderBackButton>
-            )
-        });
-    }, [navigation]);
+    //             </HeaderBackButton>
+    //         )
+    //     });
+    // }, [navigation]);
 
     const findRecipeByName = (recipe, name) => {
         for (var i = 0; i < recipe.length; i++) {
@@ -79,10 +78,16 @@ const Ingredients = ({ navigation, route }) => {
                     >Ingredients</Text>
 
                     <TouchableOpacity
-                        // onPress = {() => {
-                        //     myRecipe.ingredients.push({quantity: "", name: ""});
-                            
-                        // }}
+                        onPress={() => {
+                            let temp = Object.assign({}, myRecipe);
+
+                            temp.ingredients.push({
+                                quantity: "1",
+                                name: "item" + (temp.ingredients.length + 1)
+                            });
+
+                            setmyRecipe(temp);
+                        }}
                         style={style.headerButton}
                     >
                         <Text style={style.headerButtonText}>+ Add ingredient</Text>
@@ -125,6 +130,15 @@ const Ingredients = ({ navigation, route }) => {
                     >Preparation</Text>
 
                     <TouchableOpacity
+                        onPress={() => {
+                            let temp = Object.assign({}, myRecipe);
+
+                            temp.steps.push(
+                                "Step " + (temp.steps.length + 1)
+                            );
+
+                            setmyRecipe(temp);
+                        }}
                         style={style.headerButton}
                     >
                         <Text style={style.headerButtonText}>+ Add step</Text>

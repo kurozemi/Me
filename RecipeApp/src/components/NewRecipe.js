@@ -6,6 +6,28 @@ import { HeaderBackButton } from '@react-navigation/stack'
 
 const NewRecipe = ({ navigation, route }) => {
 
+    const [myRecipe, setmyRecipe] = useState({
+        name: "",
+        ingredients: [
+            {
+                "quantity": "1",
+                "name": "item 1",
+            },
+            {
+                "quantity": "1",
+                "name": "item 2",
+            },
+            {
+                "quantity": "1",
+                "name": "item 3",
+            },
+        ],
+        steps: [
+            "Step 1", "Step 2"
+        ],
+        timers: 0,
+        imageURL: ""
+    })
     return (
         <View style={style.main}>
 
@@ -13,9 +35,9 @@ const NewRecipe = ({ navigation, route }) => {
 
                 <View style={style.headingContainer}>
                     <TextInput
-                        multiLine = {true}
+                        multiLine={true}
                         style={style.heading}
-                        placeholder = 'Recipe name'
+                        placeholder='Recipe name'
                     ></TextInput>
                 </View>
 
@@ -29,26 +51,34 @@ const NewRecipe = ({ navigation, route }) => {
                     >Ingredients</Text>
 
                     <TouchableOpacity
+                        onPress={() => {
+                            let temp = Object.assign({}, myRecipe);
+
+                            temp.ingredients.push({
+                                quantity: "1",
+                                name: "item" + (temp.ingredients.length + 1)
+                            });
+
+                            setmyRecipe(temp);
+
+                            setIsEditable(true);
+                        }}
                         style={style.headerButton}
                     >
                         <Text style={style.headerButtonText}>+ Add ingredient</Text>
                     </TouchableOpacity>
                 </View>
 
-                {/* <FlatList
+                <FlatList
                     scrollEnabled={false}
                     keyExtractor={(item) => item.name}
-                    data={curRecipe.ingredients}
+                    data={myRecipe.ingredients}
                     renderItem={({ item }) => (
                         <View style={style.itemContainer}>
 
                             <TextInput
                                 multiline={true}
-                                editable={isEditable}
-                                style={[{
-                                    backgroundColor: isEditable ? 'white' :
-                                        'rgba(0,0,0,0)'
-                                }, style.item1]}
+                                style={style.item1}
                                 onChangeText={(text) => {
                                     item.quantity = text;
                                 }}
@@ -56,14 +86,10 @@ const NewRecipe = ({ navigation, route }) => {
                             <TextInput
                                 onChangeText={text => item.name = text}
                                 multiline={true}
-                                editable={isEditable}
-                                style={[{
-                                    backgroundColor: isEditable ? 'white' :
-                                        'rgba(0,0,0,0)'
-                                }, style.item2]} >{item.name}</TextInput>
+                                style={style.item2} >{item.name}</TextInput>
                         </View>
                     )}
-                /> */}
+                />
 
                 <View style={style.headingContainer}>
                     <Text
@@ -71,31 +97,36 @@ const NewRecipe = ({ navigation, route }) => {
                     >Preparation</Text>
 
                     <TouchableOpacity
+                        onPress={() => {
+                            let temp = Object.assign({}, myRecipe);
+
+                            temp.steps.push(
+                                "Step " + (temp.steps.length + 1)
+                            );
+
+                            setmyRecipe(temp);
+                        }}
                         style={style.headerButton}
                     >
                         <Text style={style.headerButtonText}>+ Add step</Text>
                     </TouchableOpacity>
                 </View>
 
-                {/* <FlatList
+                <FlatList
                     scrollEnabled={false}
-                    data={curRecipe.steps}
+                    data={myRecipe.steps}
                     renderItem={({ item }) => (
                         <View style={style.steps}>
                             <Text style={style.stepOrder}>
-                                Step {curRecipe.steps.indexOf(item) + 1}: </Text>
+                                Step {myRecipe.steps.indexOf(item) + 1}: </Text>
                             <TextInput
                                 onChangeText={text => item = text}
                                 multiline={true}
-                                editable={isEditable}
-                                style={[{
-                                    backgroundColor: isEditable ? 'white' :
-                                        'rgba(0,0,0,0)'
-                                }, style.stepDetail]}>{item}
+                                style={style.stepDetail}>{item}
                             </TextInput>
                         </View>
                     )}
-                /> */}
+                />
 
             </ScrollView>
         </View >
@@ -153,9 +184,11 @@ const style = StyleSheet.create(
             flex: 0.4,
             fontWeight: 'bold',
             borderRadius: 10,
+            backgroundColor: 'white'
         },
 
         item2: {
+            backgroundColor: 'white',
             textAlign: 'center',
             color: 'black',
             fontSize: 20,
@@ -182,6 +215,7 @@ const style = StyleSheet.create(
         },
 
         stepDetail: {
+            backgroundColor: 'white',
             color: 'black',
             fontSize: 18,
             borderRadius: 10,
