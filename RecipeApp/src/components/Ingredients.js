@@ -87,6 +87,7 @@ const Ingredients = ({ navigation, route }) => {
                             });
 
                             setmyRecipe(temp);
+                            setIsEditable(true);
                         }}
                         style={style.headerButton}
                     >
@@ -138,6 +139,7 @@ const Ingredients = ({ navigation, route }) => {
                             );
 
                             setmyRecipe(temp);
+                            setIsEditable(true);
                         }}
                         style={style.headerButton}
                     >

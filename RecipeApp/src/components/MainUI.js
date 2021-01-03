@@ -3,7 +3,7 @@ import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ScrollView, 
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Picker } from '@react-native-picker/picker';
 
-const MainUI = ({ navigation }) => {
+const MainUI = ({ navigation, route }) => {
 
   const loadData = async (recipeName) => {
 
@@ -18,6 +18,28 @@ const MainUI = ({ navigation }) => {
   });
   const [picker, setPicker] = useState('test');
 
+  React.useEffect(() => {
+
+    async function checkNewRecipe() {
+      if (route.params?.newRecipe) {
+        let picker = route.params.type;
+        let myRecipe = route.params.newRecipe;
+
+        let recipe = JSON.parse(await AsyncStorage.getItem(picker));
+
+        recipe.push(myRecipe);
+        setRecipe(recipe);
+        setPicker(picker);
+
+        recipe = JSON.stringify(recipe);
+
+        await AsyncStorage.setItem(picker, recipe);
+        // Post updated, do something with `route.params.post`
+        // For example, send the post to the server
+      }
+    }
+    checkNewRecipe();
+  }, [route.params?.newRecipe]);
   const checkFirstRun = async () => {
     const flag = await AsyncStorage.getItem('firstRun');
     console.log("check", flag);
@@ -51,13 +73,13 @@ const MainUI = ({ navigation }) => {
     <View style={style.container}>
 
       <ScrollView>
-        <View style = {style.headerContainer}> 
+        <View style={style.headerContainer}>
 
           <TouchableOpacity
-            activeOpacity = {0.8}
-            onPress = { () => navigation.navigate('New Recipe')}
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('New Recipe')}
           >
-            <Text style = {style.addRecipe}>+ Add new recipe</Text>
+            <Text style={style.addRecipe}>+ Add new recipe</Text>
           </TouchableOpacity>
 
           <View style={style.picker}>

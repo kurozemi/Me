@@ -6,6 +6,9 @@ import { Picker } from '@react-native-picker/picker';
 const NewRecipe = ({ navigation, route }) => {
 
     const [picker, setPicker] = useState('breakfast');
+
+    var myPicker = 'breakfast'; 
+    console.log("picker", myPicker);
     const [myRecipe, setmyRecipe] = useState({
         "name": "",
         "ingredients": [
@@ -37,12 +40,17 @@ const NewRecipe = ({ navigation, route }) => {
             return;
         }
 
-        let recipe = JSON.parse(await AsyncStorage.getItem(picker));
-        recipe.push(myRecipe);
+        // let recipe = JSON.parse(await AsyncStorage.getItem(picker));
+        // recipe.push(myRecipe);
 
-        await AsyncStorage.setItem(picker, JSON.stringify(recipe));
-        console.log("push completed", recipe);
-        navigation.navigate('MainUI');
+        // await AsyncStorage.setItem(picker, JSON.stringify(recipe));
+
+        console.log("picker transfer:" ,myPicker);
+        navigation.navigate('MainUI', {
+            "newRecipe": myRecipe,
+
+            "type": myPicker,
+        });
         console.log("navigate completed");
 
     }
@@ -86,8 +94,9 @@ const NewRecipe = ({ navigation, route }) => {
                     <View style = {style.picker}>
                         <Picker
                             selectedValue={picker}
-                            onValueChange={(itemValue, itemIndex) => {
-                                setPicker(itemValue);
+                            onValueChange={ async(itemValue, itemIndex) => {
+                                await setPicker(itemValue);
+                                myPicker = itemValue;
                             }}
                         >
                             <Picker.Item label="Test" value="test" />
