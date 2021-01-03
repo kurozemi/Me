@@ -255,9 +255,6 @@ const style = StyleSheet.create(
             borderRadius: 10,
             paddingLeft: 10,
         },
-        checkbox: {
-            alignSelf: 'center'
-        },
 
         headerButton: {
             flex: 0.2,

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, Image, AsyncStorage, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, Image, AsyncStorage } from 'react-native'
 import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/AntDesign'
-import { HeaderBackButton } from '@react-navigation/stack'
+import { Picker } from '@react-native-picker/picker';
 
 const NewRecipe = ({ navigation, route }) => {
 
+    const [picker, setPicker] = useState('breakfast');
     const [myRecipe, setmyRecipe] = useState({
-        name: "",
-        ingredients: [
+        "name": "",
+        "ingredients": [
             {
                 "quantity": "1",
                 "name": "item 1",
@@ -22,12 +22,45 @@ const NewRecipe = ({ navigation, route }) => {
                 "name": "item 3",
             },
         ],
-        steps: [
+        "steps": [
             "Step 1", "Step 2"
         ],
-        timers: 0,
-        imageURL: ""
+        "timers": 0,
+        "imageURL": 'https://thumbs.dreamstime.com/b/no-image-available-icon-photo-camera-flat-vector-illustration-132483097.jpg'
     })
+
+    const saveNewRecipe = async() => {
+
+        if (myRecipe.name == "" || myRecipe.timers == "")
+        {
+            alert("Please fill in all the information");
+            return;
+        }
+
+        let recipe = JSON.parse(await AsyncStorage.getItem(picker));
+        recipe.push(myRecipe);
+
+        await AsyncStorage.setItem(picker, JSON.stringify(recipe));
+        console.log("push completed", recipe);
+        navigation.navigate('MainUI');
+        console.log("navigate completed");
+
+    }
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {saveNewRecipe();}}
+                    style={style.saveButton}
+                >
+
+                    <Text style={style.saveButtonText}>Save</Text>
+                </TouchableOpacity>
+            )
+        });
+    }, [navigation]);
+
     return (
         <View style={style.main}>
 
@@ -35,6 +68,8 @@ const NewRecipe = ({ navigation, route }) => {
 
                 <View style={style.headingContainer}>
                     <TextInput
+                        onChangeText = {(text)=> myRecipe.name = text}
+                        autoFocus={true}
                         multiLine={true}
                         style={style.heading}
                         placeholder='Recipe name'
@@ -43,7 +78,25 @@ const NewRecipe = ({ navigation, route }) => {
 
                 <Image
                     style={style.foodPic}
-                    source={{ uri: 'https://thumbs.dreamstime.com/b/no-image-available-icon-photo-camera-flat-vector-illustration-132483097.jpg' }} />
+                    source={{ uri: myRecipe.imageURL }} />
+
+                <View style={style.otherContainer}>
+                    <Text style={style.otherHeading}>Type: </Text>
+
+                    <View style = {style.picker}>
+                        <Picker
+                            selectedValue={picker}
+                            onValueChange={(itemValue, itemIndex) => {
+                                setPicker(itemValue);
+                            }}
+                        >
+                            <Picker.Item label="Test" value="test" />
+                            <Picker.Item label="Breakfast" value="breakfast" />
+                        </Picker>
+
+                        
+                    </View>
+                </View>
 
                 <View style={style.headingContainer}>
                     <Text
@@ -90,6 +143,21 @@ const NewRecipe = ({ navigation, route }) => {
                         </View>
                     )}
                 />
+
+                <View style = {style.otherContainer}>
+                    <Text style = {style.otherHeading}>Timers: </Text>
+                    
+                    <TextInput
+                        keyboardType = 'number-pad'
+                        onChangeText = {text => {
+                            myRecipe.timers = text; 
+                        }}
+                        placeholder = '0'
+                        style = {style.timers}
+                    ></TextInput>
+
+                    <Text style = {style.minutes}>mins</Text>
+                </View>
 
                 <View style={style.headingContainer}>
                     <Text
@@ -161,7 +229,7 @@ const style = StyleSheet.create(
             marginLeft: 10,
             fontSize: 30,
             fontWeight: 'bold',
-            color: 'black'
+            color: 'black',
         },
 
         itemContainer: {
@@ -221,13 +289,27 @@ const style = StyleSheet.create(
             borderRadius: 10,
             paddingLeft: 10,
         },
-        checkbox: {
-            alignSelf: 'center'
-        },
 
         headerButton: {
             flex: 0.2,
             paddingRight: 20,
+        },
+
+        saveButton: {
+            marginRight: 10,
+            backgroundColor: '#0384fc',
+            borderRadius: 10,
+        },
+
+        saveButtonText: {
+            fontSize: 18,
+            color: 'white',
+            fontWeight: 'bold',
+
+            paddingTop: 8,
+            paddingBottom: 8,
+            paddingLeft: 15,
+            paddingRight: 15,
         },
 
         headerButtonText: {
@@ -235,7 +317,40 @@ const style = StyleSheet.create(
             color: '#2a58db',
             fontStyle: 'italic'
         },
+        otherContainer: {
+            marginTop: 20,
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems:'center',
+        },
 
+        otherHeading: {
+            marginLeft: 10,
+            fontSize: 30,
+            fontWeight: 'bold',
+            color: 'black'
+        },
+        picker: {
+            height: 50,
+            width: 140,
+            marginLeft: 10,
+            borderRadius: 10,
+            borderWidth: 2,
+        }, 
+        timers: {
+            backgroundColor: 'white',
+            borderRadius: 7,
+            marginLeft: 10,
+            padding: 12,
+            fontSize: 17,
+            width: 50,
+            textAlign: 'center'
+        },
+        minutes: {
+            marginLeft: 10,
+            fontSize: 18,
+            fontStyle: 'italic'
+        },
     }
 )
 export default NewRecipe;
